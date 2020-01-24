@@ -1,0 +1,6 @@
+supplier
+1. nama supplier keliatannya kurang
+2. belum ada validasi untuk field tidak diisi
+3. belum ada validasi untuk data kembar
+
+Harga di bikin gampang bacanya
