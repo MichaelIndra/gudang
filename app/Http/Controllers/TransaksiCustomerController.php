@@ -259,15 +259,15 @@ class TransaksiCustomerController extends Controller
 
         return $datatables->of($builder)
             ->addColumn('print', function($builder){
-                // if($builder->statusinv == 'TAW'){
-                //     return    '<a class="btn btn-success btn-sm" href="'.route('transaksicustomer.printinvoice', ['invoice'=>$builder->id_trans_cust]).'">
-                //     PRINT</a>';
-                // }else{
-                //     return    '<a class="btn disabled btn-sm" href="">
-                //     PRINT</a>';
-                // }
-                return    '<a class="btn btn-success btn-sm" href="'.route('transaksicustomer.printinvoice', ['invoice'=>$builder->id_trans_cust]).'">
-                PRINT</a>';
+                if($builder->statusinv == 'TAW'){
+                    return    '<a class="btn btn-success btn-sm" href="'.route('transaksicustomer.printinvoice', ['invoice'=>$builder->id_trans_cust]).'">
+                    PRINT</a>';
+                }else{
+                    return    '<a class="btn disabled btn-sm" href="">
+                    PRINT</a>';
+                }
+                // return    '<a class="btn btn-success btn-sm" href="'.route('transaksicustomer.printinvoice', ['invoice'=>$builder->id_trans_cust]).'">
+                // PRINT</a>';
                     
             })
             ->addColumn('bayarbut', function($builder){
