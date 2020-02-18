@@ -9,6 +9,8 @@
                 <th>No Invoice</th>
                 <th>Nama Customer</th>
                 <th>Total Belanja</th>
+                <th>Total Diskon</th>
+                <th>Total</th>
                 <th>Total Bayar</th>
                 <th>Status Bayar</th>
                 <th>Metode Bayar</th>
@@ -65,6 +67,8 @@
                      {data : 'id_trans_cust', name: 'id_trans_cust'},
                      {data : 'nama_cust', name : 'nama_cust'},
                      {data : 'total_harga', name : 'total_harga', render: $.fn.dataTable.render.number( ',', '.', 2 )},
+                     {data : 'diskon', name : 'diskon', render: $.fn.dataTable.render.number( ',', '.', 2 )},
+                     {data : 'bersih', name : 'bersih', render: $.fn.dataTable.render.number( ',', '.', 2 )},
                      {data : 'bayar', name : 'bayar', render: $.fn.dataTable.render.number( ',', '.', 2 )},
                      {data: 'status', name : 'status'},
                      {data: 'metode', name : 'metode'},
@@ -76,7 +80,7 @@
                      {data: 'cancel', name : 'cancel', orderable : false},
                   ],
                  columnDefs : [
-                    {targets : [2,3], className : 'dt-right'    },
+                    {targets : [2,3,4,5], className : 'dt-right'    },
                 ]  
             });
          });

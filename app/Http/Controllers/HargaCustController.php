@@ -48,13 +48,25 @@ class HargaCustController extends Controller
     
     public function store(Request $request)
     {
+        $message ="";
         $this->validate($request, $this->rules);
         $data = $request->except('supp');
-        // dd ($data) ;
-        Harga_cust::create($data);
-        $data['keterangan'] = 'BARU';
-        Harga_cust_Hist::create($data);
-        return redirect('hargacusts')->with('message', 'Master harga customer tersimpan');
+        //  dd ($data) ;
+        $cek = Harga_cust::where('id_brg', $request->id_brg)
+            ->where('id_cust', $request->id_cust)
+            ->get();
+    
+        if($cek->count() != 0)
+        {
+            $message = 'Master harga sudah pernah tersimpan';
+        }else{ 
+            Harga_cust::create($data);
+            $data['keterangan'] = 'BARU';
+            Harga_cust_Hist::create($data);
+            $message = 'Master harga customer tersimpan';
+        }
+        
+        return redirect('hargacusts')->with('message', $message);
     }
 
     

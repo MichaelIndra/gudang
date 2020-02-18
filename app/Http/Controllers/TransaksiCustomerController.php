@@ -176,6 +176,7 @@ class TransaksiCustomerController extends Controller
         $keterangan = '-';
         $idtranssup = $this->getNoInvoice();
         $diskon = $request->input('diskon');
+        $totdiskon = 
         $bayar = $request->input('bayar');
         $metode = $request->input('metode');
         $term = '-';
@@ -184,6 +185,8 @@ class TransaksiCustomerController extends Controller
         }
         
         $totharga = Cart::session($this->sessionkey)->getTotal();
+        $totdiskon = $totharga * ($diskon/100);
+
         $status = $totharga > $bayar ? 'PIUTANG' : 'LUNAS';
         $statglb = 'TAW';
         // if($status == 'LUNAS'){
@@ -194,7 +197,7 @@ class TransaksiCustomerController extends Controller
 
         $transcustglb ['id_trans_cust'] = $idtranssup;
         $transcustglb ['total_harga'] = $totharga;
-        $transcustglb ['diskon'] = $diskon;
+        $transcustglb ['diskon'] = $totdiskon;
         $transcustglb ['keterangan'] = $keterangan;
         $transcustglb ['status'] = $statglb;
         $transcustglb ['id_sales'] = $sales;
@@ -247,21 +250,24 @@ class TransaksiCustomerController extends Controller
             ->join('sales', 'transaksi_cust_glbs.id_sales', '=', 'sales.id_sales')
             ->where('transaksi_cust_byrs.status','PIUTANG')
             ->where('transaksi_cust_glbs.status','<>','CNL')
-            ->select('transaksi_cust_glbs.id_trans_cust', 'transaksi_cust_glbs.total_harga', 
+            ->select('transaksi_cust_glbs.id_trans_cust', 'transaksi_cust_glbs.total_harga', 'transaksi_cust_glbs.diskon',
                     'transaksi_cust_glbs.created_at', 'transaksi_cust_byrs.bayar',
                     'customers.nama_cust', 'sales.nama_sales', 'transaksi_cust_byrs.metode', 'transaksi_cust_byrs.status',                    
-                    DB::raw('transaksi_cust_glbs.status statusinv'))
+                    DB::raw('transaksi_cust_glbs.status statusinv'),
+                    DB::raw('transaksi_cust_glbs.total_harga - transaksi_cust_glbs.diskon AS bersih'))
             ->get();
 
         return $datatables->of($builder)
             ->addColumn('print', function($builder){
-                if($builder->statusinv == 'TAW'){
-                    return    '<a class="btn btn-success btn-sm" href="'.route('transaksicustomer.printinvoice', ['invoice'=>$builder->id_trans_cust]).'">
-                    PRINT</a>';
-                }else{
-                    return    '<a class="btn disabled btn-sm" href="">
-                    PRINT</a>';
-                }
+                // if($builder->statusinv == 'TAW'){
+                //     return    '<a class="btn btn-success btn-sm" href="'.route('transaksicustomer.printinvoice', ['invoice'=>$builder->id_trans_cust]).'">
+                //     PRINT</a>';
+                // }else{
+                //     return    '<a class="btn disabled btn-sm" href="">
+                //     PRINT</a>';
+                // }
+                return    '<a class="btn btn-success btn-sm" href="'.route('transaksicustomer.printinvoice', ['invoice'=>$builder->id_trans_cust]).'">
+                PRINT</a>';
                     
             })
             ->addColumn('bayarbut', function($builder){
@@ -304,7 +310,7 @@ class TransaksiCustomerController extends Controller
             ->join('customers', 'transaksi_cust_glbs.id_cust', '=', 'customers.id_cust')
             ->join('sales', 'transaksi_cust_glbs.id_sales', '=', 'sales.id_sales')
             ->where('transaksi_cust_glbs.id_trans_cust', $invoice)
-            ->select('transaksi_cust_glbs.id_trans_cust', 'transaksi_cust_glbs.total_harga', 'transaksi_cust_glbs.created_at',
+            ->select('transaksi_cust_glbs.id_trans_cust', 'transaksi_cust_glbs.total_harga', 'transaksi_cust_glbs.created_at', 'transaksi_cust_glbs.diskon',
                     'transaksi_cust_glbs.created_at', 'customers.term',
                     'customers.nama_cust', 'customers.alamat', 'sales.nama_sales', 'transaksi_cust_byrs.metode', 'transaksi_cust_byrs.bayar', 
                     'transaksi_cust_byrs.status',

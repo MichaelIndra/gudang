@@ -22,7 +22,7 @@
 <body>
     <button id="printPageButton" onClick="window.print();">Print</button>
     <header class="clearfix">
-      <h1>{{$glb->id_trans_cust}}</h1>
+      
       <div id="company" >
         <div><span>CUSTOMER</span>&nbsp;{{$glb->nama_cust}}</div>
         <div><span>ALAMAT</span>&nbsp;{{$glb->alamat}}</div>
@@ -41,7 +41,7 @@
       </div>
     </header>
     <main>
-      <table>
+      <table border ="1">
         <thead>
           <tr>
             <th>NO</th>
@@ -75,8 +75,12 @@
                 <td class="total">{{number_format($summ['harga_total'], 2, ',', '.')}}</td>
             </tr>
             <tr>
+                <td colspan="4">DISKON</td>
+                <td class="total">{{number_format($glb->diskon, 2, ',', '.')}}</td>
+            </tr>
+            <tr>
                 <td colspan="4" class="grand total">GRAND TOTAL</td>
-                <td class="grand total">{{number_format($summ['harga_total'], 2, ',', '.')}}</td>
+                <td class="grand total">{{number_format($summ['harga_total'] -$glb->diskon, 2, ',', '.')}}</td>
             </tr>         
         </tbody>
       </table>

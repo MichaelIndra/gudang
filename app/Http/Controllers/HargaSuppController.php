@@ -39,12 +39,23 @@ class HargaSuppController extends Controller
 
     public function store(Request $request)
     {
+        $message ="";
         $this->validate($request, $this->rules);
         $data = $request->except('supp');
-        HargaSupp::create($data);
-        $data['keterangan'] = 'BARU';
-        HargaSuppHist::create($data);
-        return redirect('hargasupps')->with('message', 'Master harga supplier tersimpan');
+        $cek = HargaSupp::where('id_brg', $request->id_brg)->get();
+
+        if($cek->count() != 0)
+        {
+            $message = 'Master harga sudah pernah tersimpan';
+        }else{
+            HargaSupp::create($data);
+            $data['keterangan'] = 'BARU';
+            HargaSuppHist::create($data);
+            $message = 'Master harga supplier tersimpan';
+        }
+
+       
+        return redirect('hargasupps')->with('message', $message.'-'.$cek->count());
     }
 
     public function show($id)

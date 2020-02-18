@@ -48,7 +48,7 @@
                 @if(session('sales'))
                     <h3>{{App\Sales::find(session('sales'))->nama_sales}}</h3>
                 @endif
-                Total Bayar
+                Total Harga
                 <h2>Rp. {{ number_format(Cart::session($sessionkey)->getTotal(),2,',','.') }}</h2>
             </div>
             
@@ -121,14 +121,16 @@
             </div>
         </div>
         <div class="row panel-default">
-            <div class="col-md-4 panel panel-default">
+            <div class="col-md-6 panel panel-default">
+                
+                <div class="row">
+                        <div class="col-md-4">Diskon (dalam %)</div>
+                        <div class="col-md-4"><input type="number" id="diskon" min="0" max="100" style="width:150px;" class="form-control"/></div>
+                        <div class="col-md-2"><input type="text" style="width:150px;" id="totdiskon" class="totdiskon form-control" disabled/></div>
+                </div>
                 <div class="row">
                     <div class="col-md-4">Total Harga</div>
                     <div class="col-md-4"><input type="text" style="width:150px;" value ="{{ number_format(Cart::session($sessionkey)->getTotal(),2,',','.') }}" id="totbayar" class="totbayar form-control" disabled/></div>
-                </div>
-                <div class="row">
-                        <div class="col-md-4">Diskon</div>
-                        <div class="col-md-4"><input type="number" id="diskon" style="width:150px;" class="form-control"/></div>
                 </div>
                 <div class="row">
                         <div class="col-md-4">Bayar</div>
@@ -140,6 +142,7 @@
                         </div>
                         
                 </div>
+                
                 <div class="row">
                     <div class="col-md-4"></div>
                     <div class="col-md-4"><button id="save">Simpan</button></div>
@@ -282,6 +285,7 @@
             });
         });
 
+
         $("#addCart").click(function(){
             if ( $("#qty").val().length === 0 || $("#qty").val() == 0 )
             {
@@ -309,7 +313,22 @@
                 
             }
         });
-
+        $("#diskon").keyup(function(){
+            
+            
+            var diskon = parseInt($("#diskon").val());
+            var harga = parseInt({{Cart::session($sessionkey)->getTotal() }});
+            var totdiskon = harga * (diskon/100);
+            var totbayar = harga - totdiskon;
+            $("#totdiskon").val(totdiskon);
+            $("#totbayar").val(totbayar);
+            
+            // if($("#diskon").val()  ){
+            //     alert('nan');
+            // }else{
+            //     alert('ora');
+            // }
+        });
 
         $("#save").click(function(){
             var no_byr;
