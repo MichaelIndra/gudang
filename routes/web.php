@@ -50,7 +50,9 @@ Route::group(['prefix'=>'transaksisuppliers'], function(){
     Route::delete('/{transaksisupplier}/destroy', ['uses'=>'TransaksiSupplierController@destroy', 'as'=>'transaksisupplier.destroy']);
     Route::get('/addtransaksisupp', ['uses'=>'TransaksiSupplierController@addtransaksisupp', 'as'=>'transaksisupplier.addtransaksisupp']);
     // Route::post('/', ['uses'=>'TransaksiSupplierController@addtransaksisupp', 'as'=>'transaksisupplier.addtransaksisupp']);
-
+    Route::get('/create', ['uses'=>'TransaksiSupplierController@create', 'as'=>'transaksisupplier.create']);
+    Route::get('/data', ['uses'=>'TransaksiSupplierController@data', 'as'=>'transaksisupplier.data']);
+    Route::get('/detail', ['uses'=>'TransaksiSupplierController@detail', 'as'=>'transaksisupplier.detail']);
 });
 
 

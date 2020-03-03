@@ -128,6 +128,7 @@
                 <div class="row">
                     <div class="col-md-4"></div>
                     <div class="col-md-4"><button id="save">Simpan</button></div>
+                    <a href="{{route('transaksisupplier.index')}}" class="btn btn-info ml-3" id="create-new-user">Kembali</a>
                 </div>
             </div>
         </div>

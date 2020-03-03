@@ -12,6 +12,7 @@ use App\TransaksiSuppDet;
 use App\TransaksiSuppGlb;
 use App\Stok;
 use App\Barang;
+use yajra\Datatables\Datatables;
 
 class TransaksiSupplierController extends Controller
 {
@@ -22,6 +23,12 @@ class TransaksiSupplierController extends Controller
     }
 
     public function index()
+    {
+        // return view('transaksi.customer.boarding', ['title'=>'TRANSAKSI CUSTOMER', 'tgl'=>$now, 'inv'=>$inv, 'sessionkey'=>$this->sessionkey]);
+        return view('transaksi.supplier.transaksi', ['title'=>'TRANSAKSI SUPPLIER']);
+    }
+
+    public function create()
     {
         $c = Counter::find("INV-SUPP");
         $blnUpdate = Carbon::parse($c->updated_at)->format('M Y');
@@ -38,6 +45,35 @@ class TransaksiSupplierController extends Controller
         $inv = $this->getNoInvoice();
 
         return view('transaksi.supplier.boarding', ['title'=>'TRANSAKSI SUPPLIER', 'tgl'=>$now, 'inv'=>$inv, 'sessionkey'=>$this->sessionkey]);
+    }
+
+    public function data(Datatables $datatables){
+        // join('transaksi_supp_dets', 'transaksi_supp_glbs.id_trans_supp', '=', 'transaksi_supp_dets.id_trans_supp')
+            
+        $builder = TransaksiSuppGlb::join('suppliers', 'transaksi_supp_glbs.id_supp', '=', 'suppliers.id_supp')
+            ->select('transaksi_supp_glbs.id_trans_supp', 'transaksi_supp_glbs.total_harga', 'transaksi_supp_glbs.diskon',
+                    'transaksi_supp_glbs.created_at',
+                    'suppliers.nama_supp');
+            
+
+        return $datatables->of($builder)
+            ->addColumn('detail', function($builder){
+                return "<button onclick=show('$builder->id_trans_supp'); type='button' class='btn btn-circle btn-info '>detail</button>";
+                
+            })
+            ->rawColumns(['detail'])
+            ->make(true);
+            //<i class="fa fa-print></i>&nbsp;
+    }
+
+    public function detail(Request $request){
+        $inv = $request->get("id");
+        $data = TransaksiSuppDet::join('barangs', 'transaksi_supp_dets.id_brg', '=', 'barangs.id_brg')
+                        ->select('barangs.nama_brg', 'transaksi_supp_dets.qty', 'transaksi_supp_dets.harga_satuan',
+                        'transaksi_supp_dets.harga_total')
+                        ->where('transaksi_supp_dets.id_trans_supp', $inv)
+            ->get();
+        return response()->json(array('successs'=>true, 'data'=>$data));
     }
 
     private function getNoInvoice()

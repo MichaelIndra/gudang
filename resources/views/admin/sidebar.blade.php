@@ -80,7 +80,7 @@
               </li>
               
               <li class="nav-item ">
-                <a href="{{route('transaksisupplier.index')}}" class=" nav-link {{set_active(['transaksisupplier.index'])}}">
+                <a href="{{route('transaksisupplier.index')}}" class=" nav-link {{set_active(['transaksisupplier.index', 'transaksisupplier.detail', 'transaksisupplier.create'])}}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>TRANSAKSI SUPPLIER</p>
                 </a>
